@@ -1,0 +1,10 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {integrateMusicSource} from './music-integration.mjs';
+const root=process.cwd(),source=path.resolve(process.argv[2]||'.build-cache/folia-major-source'),output=path.resolve('resources/folia-web-1.5');
+process.env.VITE_NETEASE_API_BASE='/netease-api';
+const {build}=await import(pathToFileURL(path.join(source,'node_modules/vite/dist/node/index.js')).href);
+const bridge=await fs.readFile('desktop/modules/music/folia-bridge.js','utf8');
+await build({root:source,configFile:path.join(source,'vite.config.ts'),build:{outDir:output,emptyOutDir:true},plugins:[{name:'guagua-music-host',enforce:'pre',transform:integrateMusicSource,transformIndexHtml:{order:'pre',handler(html){return {html:html.replaceAll('Folia','音乐').replace('<span>F</span><span>o</span><span>l</span><span>i</span><span>a</span>','<span>音</span><span>乐</span>'),tags:[{tag:'script',attrs:{type:'module',src:'/__guagua__/bridge.js'},injectTo:'body'}]};}},resolveId(id){if(id==='/__guagua__/bridge.js')return '\0guagua-music-host';},load(id){if(id==='\0guagua-music-host')return bridge;}}]});
+console.log('瓜瓜 Folia 网页构建完成：'+path.relative(root,output));

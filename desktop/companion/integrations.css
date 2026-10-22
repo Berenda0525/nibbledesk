@@ -1,0 +1,12 @@
+#attachments{display:flex;flex-wrap:wrap;gap:6px;max-height:64px;overflow:auto;margin-bottom:7px}#attachments[hidden]{display:none}#attachments>span{display:flex;align-items:center;gap:6px;max-width:230px;border:1px solid #ffffff18;border-radius:7px;padding:5px 8px;font-size:10px;color:#d6d6d6}#attachments>span>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#attachments button{border:0;background:none;color:#999;font-size:15px;cursor:pointer}
+#island.file-drag{outline:2px solid #70bc9e;outline-offset:-3px}#island.file-drag #compact-label{color:#9de3c8}
+.music-wave{display:inline-flex;align-items:center;justify-content:center;gap:2px;width:22px;height:20px;flex-shrink:0}.music-wave i{width:2px;height:18px;background:#b6d6c5;border-radius:2px;transform:scaleY(calc(.15 + var(--energy,0)*.85));transition:transform 120ms linear;transform-origin:center}
+.compact-wave{display:none}.music-playing .compact-wave{display:inline-flex}.music-playing .compact-dot{display:none}
+#music-strip{display:flex;align-items:center;gap:12px;padding:8px 14px;margin-top:2px;border-block:1px solid #ffffff09;min-height:44px;flex:none}#music-strip[hidden]{display:none}#music-strip>div{min-width:0}#music-title{font-size:10px;color:#aaa;font-weight:400;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#music-lyric{font-size:12px;line-height:1.6;color:#e0e4e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:2px 0 0}
+@media(prefers-reduced-motion:reduce){.music-wave i{transition:none;transform:scaleY(.4)}}
+
+/* 播放脉冲保持连续，实时能量叠加在音条的高度上。 */
+.music-playing .music-wave i{height:calc(5px + var(--energy,0)*13px);animation:guagua-equalizer .78s ease-in-out infinite alternate;transition:height 120ms linear}
+.music-playing .music-wave i:nth-child(2){animation-delay:-.31s;animation-duration:.53s}.music-playing .music-wave i:nth-child(3){animation-delay:-.48s;animation-duration:.67s}.music-playing .music-wave i:nth-child(4){animation-delay:-.12s;animation-duration:.49s}.music-playing .music-wave i:nth-child(5){animation-delay:-.62s;animation-duration:.71s}
+@keyframes guagua-equalizer{0%{transform:scaleY(.32)}40%{transform:scaleY(.72)}100%{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.music-playing .music-wave i{animation:none;transform:scaleY(.6)}}

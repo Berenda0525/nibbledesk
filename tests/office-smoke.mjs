@@ -1,0 +1,57 @@
+import {_electron as electron} from '@playwright/test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import JSZip from 'jszip';
+const root=process.cwd(),dataRoot=path.join(root,'.test-data');await fs.mkdir(dataRoot,{recursive:true});
+const dataDir=await fs.mkdtemp(path.join(dataRoot,'office-smoke-'));
+const env={...process.env,STAR_CHAT_TEST_DATA_DIR:dataDir,GUAGUA_OFFICE_KIND:process.argv[2]||'docx'};delete env.ELECTRON_RUN_AS_NODE;
+let application;
+try{
+  application=await electron.launch({args:[path.join(root,'tests','office-harness-main.mjs')],env,timeout:45000});
+  const page=await application.firstWindow();const errors=[];
+  page.on('dialog',dialog=>dialog.accept().catch(()=>{}));
+  page.on('console',message=>{if(message.type()==='error')console.log('console: '+message.text().slice(0,800));});
+  page.on('pageerror',error=>{errors.push(error.message);console.log('pageerror: '+error.message);});
+  assert.equal(await page.evaluate(()=>crossOriginIsolated),true);
+  await page.waitForFunction(()=>typeof loaded!=='undefined'&&loaded||!document.getElementById('office-error').hidden,{},{timeout:150000});
+  const status=await page.evaluate(()=>({loaded:typeof loaded!=='undefined'&&loaded,error:document.getElementById('office-error').hidden?'':document.getElementById('office-error').textContent}));
+  console.log(JSON.stringify({dataDir,status,errors}));
+  await page.waitForTimeout(3000);
+  console.log(JSON.stringify(await page.evaluate(()=>({canvas:{width:canvas.width,height:canvas.height,rect:canvas.getBoundingClientRect().toJSON()},body:document.body.innerHTML.slice(-500)}))));
+  const output=path.join(root,'输出','测试截图');await fs.mkdir(output,{recursive:true});
+  await page.screenshot({path:path.join(output,`office-${env.GUAGUA_OFFICE_KIND}-${Date.now()}.png`)});
+  assert.equal(status.error,'');assert.equal(status.loaded,true);
+  await page.waitForFunction(()=>typeof session!=='undefined'&&!!session.assetId,{},{timeout:30000});
+  if(env.GUAGUA_OFFICE_KIND==='docx'){
+    await page.evaluate(()=>{window.officeEvents=[];window.addEventListener('message',event=>officeEvents.push(event.data));});
+    await page.mouse.click(290,220);
+    await page.keyboard.type('Guagua editable Word document');
+    await page.waitForTimeout(500);
+    await page.keyboard.press('Control+a');
+    await page.waitForTimeout(500);
+    await page.mouse.click(667,74);
+    await page.waitForTimeout(500);
+    await page.screenshot({path:path.join(output,`office-docx-before-save-${Date.now()}.png`)});
+    await page.waitForFunction(()=>dirty===true,{},{timeout:10000});
+    await page.keyboard.press('Control+s');
+    await page.waitForFunction(()=>session.revision>=2&&!dirty&&!saving,{},{timeout:30000});
+    const bytes=await page.evaluate(()=>Array.from(FS.readFile('/tmp/office/document.docx')));
+    const zip=await JSZip.loadAsync(Buffer.from(bytes));const xml=await zip.file('word/document.xml').async('string');
+    assert.match(xml,/Guagua editable Word document/);assert.match(xml,/<w:b[ >\/]/);
+    await page.waitForTimeout(1200);
+    await page.screenshot({path:path.join(output,`office-docx-edited-${Date.now()}.png`)});
+    await page.keyboard.press('Control+Shift+s');
+    await page.waitForFunction(()=>officeEvents.some(event=>event.type==='guagua-document-export'),{},{timeout:10000});
+    const id=await page.evaluate(()=>session.assetId);
+    const reopened=await application.evaluate(async(_electron,id)=>globalThis.officeTest.server.openSession({assetId:id}),id);
+    await page.goto(reopened.url);
+    await page.waitForFunction(()=>typeof loaded!=='undefined'&&loaded,{},{timeout:150000});
+    await page.waitForTimeout(1200);
+    const restored=await page.evaluate(()=>Array.from(FS.readFile('/tmp/office/document.docx')));
+    const restoredZip=await JSZip.loadAsync(Buffer.from(restored));assert.match(await restoredZip.file('word/document.xml').async('string'),/Guagua editable Word document/);
+    await page.screenshot({path:path.join(output,`office-docx-reopened-${Date.now()}.png`)});
+  }
+  const sessionInfo=await page.evaluate(()=>({assetId:session.assetId,name:session.name,revision:session.revision}));
+  console.log(JSON.stringify({passed:true,session:sessionInfo,dataDir}));
+}catch(error){console.error('SMOKE FAILURE',error);throw error;}finally{if(application){for(const page of application.windows())await page.evaluate(()=>{if(typeof dirty!=='undefined')dirty=false;if(typeof saving!=='undefined')saving=false;}).catch(()=>{});await application.close();}}

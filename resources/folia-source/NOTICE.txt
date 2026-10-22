@@ -1,0 +1,8 @@
+Folia 0.7.21 / chthollyphile
+Source: https://github.com/chthollyphile/folia-major
+Commit: f3a90708afbec884934d8bca16bbd0a35feeb6a7
+License: AGPL-3.0; see upstream LICENSE and README.md for terms.
+Guagua builds this pinned upstream source with the integration transforms in scripts/music-integration.mjs.
+The music web application runs in an isolated local origin. Guagua adds its own local NetEase API host and lyric/audio bridge.
+Retrieve the exact source archive with npm run resources:folia. Preserve this notice and LICENSE when distributing the integration.
+Build: npm --prefix .build-cache/folia-major-source ci --ignore-scripts; npm run music:build

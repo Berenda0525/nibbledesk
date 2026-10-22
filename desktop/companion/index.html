@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><link rel="stylesheet" href="overlay.css"><link rel="stylesheet" href="integrations.css"><script type="module" src="overlay.js"></script><title>桌面快聊</title></head>
+<body><main id="island" aria-label="桌面快聊" data-expanded="false">
+  <button id="compact" aria-label="展开快聊" aria-expanded="false"><img class="compact-logo" src="../assets/guagua-icon.png" alt=""/><span id="compact-label">随时问我</span><span class="music-wave compact-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="compact-dot" aria-hidden="true"></span></button>
+  <section id="panel" aria-hidden="true" inert>
+    <header class="panel-header"><div class="heading"><span id="agent-name">快聊</span><button id="model-label" aria-label="切换快聊模型" aria-expanded="false"></button><div id="model-menu" role="listbox" aria-label="模型版本" hidden></div></div><div class="header-actions">
+      <button id="new-chat" class="icon-button" aria-label="新建快聊" title="新建快聊"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button id="open-workspace" class="icon-button" aria-label="在工作台继续" title="在工作台继续"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg></button>
+      <button id="collapse" class="icon-button" aria-label="收起快聊" title="收起"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg></button>
+    </div></header>
+    <div id="agents" class="agent-row" role="tablist" aria-label="选择助手"></div>
+    <aside id="music-strip" hidden><span class="music-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><div><strong id="music-title"></strong><p id="music-lyric"></p></div></aside>
+    <aside id="notification" hidden><div id="notification-title"></div><p id="notification-body"></p></aside>
+    <div id="transcript" role="log" aria-live="polite" aria-label="快聊内容"><div id="empty-state"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 5 2.8 8.2L27 16l-8.2 2.8L16 27l-2.8-8.2L5 16l8.2-2.8Z"/></svg><p id="empty-title">有什么想聊的？</p><span>选一位助手，开始一段对话</span></div><div id="messages"></div><div id="thinking" hidden><i></i><i></i><i></i><span>正在回复</span></div></div>
+    <p id="error" role="status" hidden></p>
+    <form id="composer"><div id="attachments" hidden></div><textarea id="prompt" rows="2" maxlength="12000" aria-label="快聊输入" placeholder="问点什么…"></textarea><div class="composer-footer"><button type="button" id="voice" class="icon-button" aria-label="语音输入" title="语音输入"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg></button><span id="input-hint">Enter 发送 · Shift + Enter 换行</span><button id="send" class="send-button" type="submit" aria-label="发送消息" title="发送"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button><button id="stop" class="send-button stop-button" type="button" aria-label="停止回复" title="停止回复" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button></div></form>
+  </section>
+</main></body></html>

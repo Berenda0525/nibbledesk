@@ -1,0 +1,13 @@
+{
+  "updated": "2026-10-21",
+  "communityIconLibrary": "https://github.com/lobehub/lobe-icons",
+  "licenseFile": "/assets/LOBE-ICONS-LICENSE.txt",
+  "description": "Claude、Kimi、豆包采用 Lobe Icons 社区维护的品牌矢量标记。图标库代码许可不代表品牌商标授权。图标保持下载时原始 SVG 内容。",
+  "files": {
+    "claude.svg": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/claude-color.svg",
+    "kimi.svg": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/kimi-color.svg",
+    "kimi-light.svg": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/kimi.svg",
+    "doubao.svg": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/doubao-color.svg"
+  },
+  "retainedOfficialAssets": ["gpt.svg", "deepseek.svg", "gemini.png"]
+}

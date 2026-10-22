@@ -1,0 +1,19 @@
+Guagua 1.7.1
+Copyright (c) 2026 Guagua contributors.
+Guagua application source is licensed under AGPL-3.0-only; see LICENSE.
+Third-party components retain their own copyright and license terms.
+
+Folia by chthollyphile (AGPL-3.0) is integrated as an isolated music web application.
+Upstream: https://github.com/chthollyphile/folia-major
+Pinned commit: f3a90708afbec884934d8bca16bbd0a35feeb6a7
+Upstream license is retained in resources/folia-source/LICENSE.
+The pinned source is retrieved by scripts/prepare-public-resources.mjs;
+scripts/build-folia.mjs and scripts/music-integration.mjs implement the Guagua integration.
+Changes include navigation/display strings, music session isolation, lyric/audio-energy bridge,
+and a local NetEase API host. See docs/THIRD_PARTY.md.
+
+DeepSeek Harness, whisper.cpp, NetEaseCloudMusicApiEnhanced, ZetaOffice/LibreOffice,
+Electron, React, Vite, Lucide and Lobe Icons retain their respective licenses.
+APImart is an optional third-party API provider.
+ClawChat, eIsland and Open Island are credited as product/interaction references.
+Brand names, logos and other third-party media remain the property of their owners.

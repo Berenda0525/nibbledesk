@@ -1,0 +1,215 @@
+{
+  "name": "guagua-desktop",
+  "productName": "瓜瓜",
+  "version": "1.7.1",
+  "description": "多模型聊天与创作桌面工作台",
+  "author": "Guagua",
+  "private": true,
+  "type": "module",
+  "main": "desktop/main.mjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "test": "node --test tests/*.test.mjs",
+    "desktop": "electron .",
+    "prepare:source": "node scripts/prepare-source.mjs",
+    "pack": "node scripts/package-desktop.mjs",
+    "pack:dir": "node scripts/package-desktop.mjs --dir",
+    "pack:installer": "node scripts/package-desktop.mjs --installer",
+    "qa:prepare": "node scripts/prepare-qa.mjs",
+    "artifacts:audit": "node scripts/audit-artifacts.mjs",
+    "resources:node": "node scripts/prepare-public-resources.mjs --node",
+    "resources:folia": "node scripts/prepare-public-resources.mjs --folia",
+    "music:build": "node scripts/build-folia.mjs",
+    "check:public": "node scripts/check-public.mjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis-plugin-group": "1.0.5",
+    "@deepseek-ai/dsh": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-anonymous-user-id": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-attachment": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-bash-local": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-store": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-compaction": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-deepseek-account": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-fs": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-hook-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-jobs": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm-deepseek": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-output-retention": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-ptc-runtime": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-sandbox": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-sdk-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-persistence": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-query": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-telemetry": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-title-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-shell": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-spill": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-subagent-in-process-driver": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-util-time": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-util-workspace-path": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-workflow": "0.2.0-rc.2",
+    "@neteasecloudmusicapienhanced/api": "4.41.1",
+    "@xmldom/xmldom": "0.8.15",
+    "jszip": "^3.10.2",
+    "lucide-react": "1.56.0",
+    "mammoth": "1.11.0",
+    "mime-db": "1.54.0",
+    "pdf-parse": "1.1.1",
+    "pptxgenjs": "^4.0.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1"
+  },
+  "overrides": {
+    "@modelcontextprotocol/client": "2.3.0",
+    "@deepseek-ai/libreoffice-kit": {
+      "fflate": "0.8.3"
+    },
+    "image-size": "2.0.4",
+    "basic-ftp": "6.2.3",
+    "app-builder-lib": "26.15.3",
+    "builder-util-runtime": "9.7.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@vitejs/plugin-react": "5.0.4",
+    "electron": "44.9.3",
+    "electron-builder": "26.15.3",
+    "pdfjs-dist": "6.4.299",
+    "vite": "6.4.4",
+    "@babel/parser": "7.29.9"
+  },
+  "build": {
+    "appId": "local.guagua.desktop",
+    "productName": "瓜瓜",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "shared/**/*",
+      "dist/**/*",
+      "desktop/**/*",
+      "core/**/*",
+      "package.json",
+      "!node_modules/mammoth/bin/**",
+      "!node_modules/mammoth/node_modules/argparse/**",
+      "!node_modules/sprintf-js/**",
+      "!node_modules/argparse/**",
+      "!node_modules/**/*.map",
+      "!desktop/assets/icon.svg",
+      "!desktop/installer.nsh"
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "extraResources": [
+      {
+        "from": "resources/runtime",
+        "to": "runtime",
+        "filter": [
+          "node.exe",
+          "LICENSE-Node.txt",
+          "node-provenance.json"
+        ]
+      },
+      {
+        "from": "resources/office-runtime",
+        "to": "office-runtime"
+      },
+      {
+        "from": "resources/speech",
+        "to": "speech",
+        "filter": [
+          "models/*.bin",
+          "runtime/Release/ggml-base.dll",
+          "runtime/Release/ggml-cpu-alderlake.dll",
+          "runtime/Release/ggml-cpu-cannonlake.dll",
+          "runtime/Release/ggml-cpu-cascadelake.dll",
+          "runtime/Release/ggml-cpu-cooperlake.dll",
+          "runtime/Release/ggml-cpu-haswell.dll",
+          "runtime/Release/ggml-cpu-icelake.dll",
+          "runtime/Release/ggml-cpu-ivybridge.dll",
+          "runtime/Release/ggml-cpu-piledriver.dll",
+          "runtime/Release/ggml-cpu-sandybridge.dll",
+          "runtime/Release/ggml-cpu-sapphirerapids.dll",
+          "runtime/Release/ggml-cpu-skylakex.dll",
+          "runtime/Release/ggml-cpu-sse42.dll",
+          "runtime/Release/ggml-cpu-x64.dll",
+          "runtime/Release/ggml-cpu-zen4.dll",
+          "runtime/Release/ggml.dll",
+          "runtime/Release/libwhisper.dll",
+          "runtime/Release/whisper-cli.exe",
+          "LICENSE-*.txt",
+          "provenance.json",
+          "source-compatibility.patch"
+        ]
+      },
+      {
+        "from": "desktop/native",
+        "to": "native",
+        "filter": [
+          "*.exe",
+          "*.dll"
+        ]
+      },
+      {
+        "from": ".build-cache/release-source-current",
+        "to": "source"
+      },
+      {
+        "from": "resources/folia-web-1.5",
+        "to": "folia-web"
+      },
+      {
+        "from": "resources/folia-source",
+        "to": "folia-source"
+      },
+      {
+        "from": "LICENSE",
+        "to": "LICENSE-Guagua.txt"
+      },
+      {
+        "from": "NOTICE.txt",
+        "to": "NOTICE-Guagua.txt"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "signAndEditExecutable": true,
+      "artifactName": "Guagua-Setup-${version}.${ext}",
+      "icon": "desktop/assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "shortcutName": "瓜瓜",
+      "runAfterFinish": false,
+      "deleteAppDataOnUninstall": false,
+      "include": "desktop/installer.nsh",
+      "installerIcon": "desktop/assets/icon.ico",
+      "uninstallerIcon": "desktop/assets/icon.ico",
+      "allowElevation": false
+    },
+    "asarUnpack": [
+      "node_modules/**/*",
+      "desktop/harness-tools-plugin.mjs"
+    ]
+  },
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Berenda0525/guagua.git"
+  },
+  "homepage": "https://github.com/Berenda0525/guagua",
+  "bugs": {
+    "url": "https://github.com/Berenda0525/guagua/issues"
+  }
+}

@@ -1,0 +1,12 @@
+diff --git a/examples/common.cpp b/examples/common.cpp
+index 8eb633e..4db2cc7 100644
+--- a/examples/common.cpp
++++ b/examples/common.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include "common.h"
+ 
++#include <algorithm>
+ #include <cmath>
+ #include <codecvt>
+ #include <cstring>

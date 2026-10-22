@@ -1,0 +1,22 @@
+import React,{useState} from 'react';
+import {Presentation,Plus,ArrowUpRight,Download,MessageSquare,FilePenLine,LoaderCircle,AlertCircle,Clock3,Search} from 'lucide-react';
+import {Avatar,formatSize,IconButton} from '../../components/Common.jsx';
+import PresentationSidebar from './PresentationSidebar.jsx';
+
+const date=value=>value?new Date(value).toLocaleString('zh-CN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'保存在本机';
+export default function PresentationWorkspace({state,controller,onOpen,onSave,onChat,onStop,opening}){
+ const [query,setQuery]=useState('');
+ const item=controller.selected,asset=item?.asset,agent=state.agents.find(row=>row.id===item?.agentId),chat=state.chats.find(row=>row.id===item?.chatId);
+ const deck=asset?.presentation?.deck,edited=asset?.presentation?.manuallyEdited,template=state.presentationTemplates?.find(row=>row.id===deck?.templateId);
+ const generated=controller.items.filter(row=>row.kind==='asset').length;
+ return <section className="ppt-workspace"><header className="ppt-header"><div><h1>PPT 制作</h1><span>{generated?`${generated} 份作品`:'把想法变成演示文稿'}</span></div><button className="button primary" onClick={controller.startNew}><Plus size={15}/>新建 PPT</button></header>
+  <div className="ppt-layout"><aside className="ppt-library"><label className="ppt-search"><Search size={14}/><input aria-label="搜索PPT作品" placeholder="搜索作品" value={query} onChange={event=>setQuery(event.target.value)}/></label><PresentationSidebar items={controller.items} selectedId={item?.id} query={query} onSelect={controller.select}/></aside><div className="ppt-content">{!item?<div className="ppt-empty"><Presentation size={46} strokeWidth={1.25}/><h2>制作第一份 PPT</h2><p>写下主题，选择风格和助手。<br/>完成后可继续沟通修改，或在原会话中修改。</p><button className="button" onClick={controller.startNew}>开始制作<ArrowUpRight size={15}/></button></div>:item.kind==='run'?<div className="ppt-run"><span className={`ppt-run-icon ${item.status==='error'?'error':''}`}>{item.status==='generating'?<LoaderCircle size={31} className="spin"/>:item.status==='error'?<AlertCircle size={31}/>:<Clock3 size={31}/>}</span><h2>{item.title}</h2><p role="status">{item.status==='generating'?item.content||'助手正在制作演示文稿…':item.error||'这次生成已停止，可以回到会话继续处理。'}</p><div><button className="button" onClick={()=>onChat(item.chatId)}><MessageSquare size={15}/>{item.status==='generating'?'查看制作进度':'返回会话继续处理'}</button>{item.status==='generating'&&<button className="text-button" onClick={()=>onStop(item.chatId)}>停止生成</button>}</div></div>:<>
+   <div className="ppt-document-heading"><span className="ppt-document-mark"><Presentation size={26} strokeWidth={1.5}/></span><div><h2>{item.title}</h2><p>{asset.name}</p></div><IconButton title={`另存为 ${asset.name}`} onClick={()=>onSave(asset.id)}><Download size={18}/></IconButton></div>
+   <div className="ppt-meta"><span>{date(item.createdAt)}</span><span>{formatSize(asset.size||0)}</span>{deck?.slides?.length&&!edited?<span>{deck.slides.length} 页</span>:null}{template&&!edited&&<span>{template.name}</span>}{asset.presentation&&<span>{item.previousId?'修改版本':'初始版本'}</span>}</div>
+   <div className="ppt-document-actions"><button className="button primary" disabled={opening===asset.id} onClick={()=>onOpen(asset)}>{opening===asset.id?<LoaderCircle size={15} className="spin"/>:<FilePenLine size={15}/>}打开阅读</button>{asset.presentation&&<button className="button" disabled={!!chat?.running} onClick={()=>controller.revise(asset)}>继续修改</button>}{chat&&<button className="text-button" onClick={()=>onChat(chat.id)}><MessageSquare size={15}/>查看会话</button>}</div>
+   {asset.presentation&&!chat&&<p className="ppt-note">原会话已删除；继续修改会为这份作品创建新的制作会话。</p>}{chat?.running&&<p className="ppt-note">原会话正在处理任务，完成后可继续修改。</p>}
+   {agent&&<div className="ppt-author"><Avatar agent={agent} size="small"/><div><strong>{agent.name}</strong><span>{asset.presentation?'制作助手':'助手'} · {agent.model}</span></div></div>}
+   <section className="ppt-outline"><div className="ppt-section-label"><h3>{edited?'当前文件':'文稿概览'}</h3><span>{edited?'已手动编辑':deck?.slides?.length>6?'前 6 页':''}</span></div>{edited?<p className="ppt-note">文稿已在编辑器中调整，打开文件可查看当前内容。AI 修改会生成新版本。</p>:deck?.slides?.length?<ol>{deck.slides.slice(0,6).map((slide,index)=><li key={index}><span>{String(index+1).padStart(2,'0')}</span><div><h4>{slide.title||`第 ${index+1} 页`}</h4>{(slide.body||slide.bullets?.join(' · '))&&<p>{slide.body||slide.bullets.join(' · ')}</p>}</div></li>)}</ol>:<p className="ppt-note">这是本机演示文件，点击“打开阅读”查看内容。</p>}</section>
+  </>}</div></div>
+ </section>;
+}

@@ -1,0 +1,2 @@
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('guaguaVideo', { state: () => ipcRenderer.invoke('guagua-video-host', { op: 'state' }), action: (name, value) => ipcRenderer.invoke('guagua-video-host', { op: 'action', name, value }), settings: patch => ipcRenderer.invoke('guagua-video-host', { op: 'settings', patch }), onState: fn => { const listener = (_event, data) => fn(data); ipcRenderer.on('guagua-video-state', listener); return () => ipcRenderer.removeListener('guagua-video-state', listener); } });

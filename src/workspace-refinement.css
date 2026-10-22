@@ -1,0 +1,49 @@
+/* 工作区保持固定联系人列；分隔线支持鼠标、触控与键盘调整。 */
+.desktop-frame .resizable-shell{grid-template-columns:60px var(--sidebar-width,235px) 6px minmax(0,1fr)}
+.desktop-frame .resizable-shell.module-view{grid-template-columns:60px minmax(0,1fr)}
+.desktop-frame .resizable-shell>.conversation-sidebar{display:flex;min-width:0;overflow:hidden;position:relative;inset:auto;width:auto;transform:none;box-shadow:none;z-index:2;grid-column:2;grid-row:1}
+.desktop-frame .resizable-shell{grid-template-rows:minmax(0,1fr)}
+.desktop-frame .resizable-shell>.rail{grid-column:1;grid-row:1}
+.desktop-frame .resizable-shell>.separator-sidebar{grid-column:3;grid-row:1}
+.desktop-frame .resizable-shell>.workspace{grid-column:4;grid-row:1}
+.desktop-frame .resizable-shell.module-view>.workspace{grid-column:2}
+.desktop-frame .resizable-shell .sidebar-scrim,.desktop-frame .resizable-shell .mobile-list-toggle{display:none!important}
+.workspace-separator{width:6px;min-height:0;position:relative;cursor:col-resize;touch-action:none;outline:none;z-index:4;background:transparent}
+.workspace-separator:after{content:'';position:absolute;inset:8px 2px;background:var(--line);border-radius:3px;transition:background .15s,opacity .15s;opacity:.6}
+.workspace-separator:hover:after,.workspace-separator:focus-visible:after,.is-resizing .workspace-separator:active:after{background:var(--accent);opacity:1}
+.is-resizing{cursor:col-resize;user-select:none}.is-resizing iframe{pointer-events:none}.is-resizing .workspace{transition:none!important}
+.desktop-frame .resizable-shell .workspace{grid-template-columns:minmax(0,1fr) 0px 0px;min-width:0;margin-left:0}
+.desktop-frame .resizable-shell .workspace.has-document{grid-template-columns:minmax(270px,1fr) 6px var(--document-width,380px)}
+.desktop-frame .resizable-shell .document-docked{min-width:260px;border-left:0}.document-dock.collapsed{visibility:hidden;pointer-events:none}
+.resizable-shell .conversation-sidebar>header{min-width:0}.resizable-shell .chat-header{padding:12px 15px;min-height:64px;height:64px;flex-wrap:nowrap}.resizable-shell .chat-heading{min-width:0}.resizable-shell .chat-heading h1{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.resizable-shell .chat-header-actions{margin-left:auto;flex-shrink:0}
+.restore-document{position:absolute;right:12px;top:70px;z-index:9;background:var(--surface)!important;border:1px solid var(--line)!important}
+.resizable-shell .chat-list-item{background:transparent!important;border-radius:0;position:relative}.resizable-shell .chat-list-item.active{color:var(--ink)}.resizable-shell .chat-list-item.active:before{content:'';position:absolute;left:0;top:24%;bottom:24%;width:2px;border-radius:2px;background:var(--accent)}
+.resizable-shell .icon-button,.resizable-shell .rail-button,.resizable-shell .rail-button:hover,.resizable-shell .composer-tools .active-mode{background:transparent!important;box-shadow:none;border:0}.resizable-shell .icon-button:hover,.resizable-shell .rail-button:hover{color:var(--accent)}
+.resizable-shell .sidebar-search,.resizable-shell .file-search{background:transparent!important;border:0!important;box-shadow:none!important;padding-inline:5px;min-width:0}.resizable-shell .sidebar-search input,.resizable-shell .file-search input{background:transparent!important;border:0!important;box-shadow:none!important;padding-inline:8px;margin:0;height:38px}
+.resizable-shell .composer-mode-label{display:none}.resizable-shell .composer-tools .icon-button{font-size:0}.resizable-shell .composer-tools .icon-button>span{font-size:0}.resizable-shell .rail-button>span{display:none}
+.resizable-shell .file-header-actions{min-width:0;gap:8px}.resizable-shell .file-header-actions .file-search{max-width:190px}.resizable-shell .file-workspace-header{gap:10px;padding-inline:20px}.resizable-shell .file-header-actions .button{white-space:nowrap}
+.resizable-shell .contacts-view>header{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.composer-right{margin-left:auto;display:flex;gap:10px;align-items:center;min-width:0}.composer-right .model-select .dropdown-trigger{max-width:170px}.resizable-shell .composer-tools{flex-wrap:wrap}.resizable-shell .composer{padding-inline:15px}.resizable-shell .send-row>span{font-size:9px}.resizable-shell .task-mode-note{display:none}
+.reader-kind{margin-right:auto;font-size:10px;color:var(--muted)}.reading-workspace .document-commandbar .text-button{display:flex;gap:5px;align-items:center;font-size:10px;white-space:nowrap}.reader-text{width:100%;padding:24px 26px;overflow:auto;line-height:1.9;font-size:13px;color:var(--ink);user-select:text}.reader-text pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.8 'Cascadia Code',Consolas,monospace}.reader-text table{border-collapse:collapse;display:block;overflow:auto}.reader-text th,.reader-text td{padding:8px 12px;border:1px solid var(--line)}.reader-text h1,.reader-text h2{margin:10px 0 20px}.reader-text p{margin:12px 0}
+.glass-folder-face::before{content:none!important}.glass-folder-face{border-radius:12px!important;background-clip:padding-box}.glass-folder-art{isolation:isolate}.glass-folder-face:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.pdf-pages{animation:reading-surface-in .18s ease-out}.pdf-page-holder{animation:reading-surface-in .18s ease-out}.pdf-grid .pdf-page-holder{animation-delay:calc(min(var(--page-index,0),8)*15ms)}
+@keyframes reading-surface-in{from{opacity:.3;transform:translateY(5px) scale(.993)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.pdf-pages,.pdf-page-holder{animation:none}.workspace-separator:after{transition:none}}
+.resizable-shell .workspace.has-document .send-row>span{display:none}
+
+/* 仅在阅读区展开时采用单列，卡片保持原有宽度。 */
+.file-workspace{container-type:inline-size;container-name:files}
+.workspace.has-document .glass-folder-grid{grid-template-columns:minmax(0,250px);gap:18px;padding-bottom:24px}
+.workspace.has-document .glass-folder-card{width:100%;max-width:250px;height:210px}
+@container files (max-width:620px){
+ .file-workspace-header{flex-wrap:wrap;padding:16px!important;align-items:flex-start}
+ .file-header-actions{width:100%;flex-wrap:wrap}
+ .file-header-actions .file-search{flex:1;max-width:none!important}
+ .file-workspace-content{padding:20px 16px}
+ .glass-folder-grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:18px}
+ .workspace.has-document .glass-folder-grid{grid-template-columns:minmax(0,250px)}
+ .files-list .workspace-file,.files-list-heading{grid-template-columns:minmax(0,1fr) 28px}
+ .files-list .workspace-file-kind,.files-list .workspace-file-size,.files-list-heading>span:nth-child(2),.files-list-heading>span:nth-child(3){display:none}
+ .file-kind-tabs{flex-wrap:wrap;gap:3px}
+ .files-list-tools{align-items:flex-start;gap:8px}
+}

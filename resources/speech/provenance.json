@@ -1,0 +1,511 @@
+{
+  "createdAt": "2026-10-21T08:01:11.364Z",
+  "engine": "whisper.cpp v1.9.2, Windows x64 CPU dispatch with statically linked LLVM-MinGW runtime",
+  "source": {
+    "url": "https://codeload.github.com/ggml-org/whisper.cpp/zip/refs/tags/v1.9.2",
+    "archive": "whisper.cpp-v1.9.2.zip",
+    "archiveSha256": "2aca1e1a8a8569968b4067a56a153abeabff41bca97d4f2e601fdc15325c3f25",
+    "tag": "v1.9.2",
+    "commit": "306c88f4d1286aec1bf96e544632897886af5501",
+    "license": "MIT",
+    "patch": {
+      "file": "source-compatibility.patch",
+      "sha256": "f84a4ec0606402cca65bfb27dbc7d758f03702f0d1bc98457d556112ec95cacb",
+      "description": "Add explicit <algorithm> include to examples/common.cpp for modern libc++."
+    }
+  },
+  "toolchain": {
+    "url": "https://github.com/mstorsjo/llvm-mingw/releases/download/20261020/llvm-mingw-20261020-ucrt-x86_64.zip",
+    "release": "20261020",
+    "compiler": "Clang 23.1.4",
+    "archiveSha256": "fd5462b7f5d93b2ff981fcd3f9c7e427e47f3203c64ea91c27bcc444eebd74cd",
+    "officialArchiveSha256": "fd5462b7f5d93b2ff981fcd3f9c7e427e47f3203c64ea91c27bcc444eebd74cd",
+    "installedGlobally": false
+  },
+  "build": {
+    "linkerFlags": {
+      "executable": "-static",
+      "shared": "-static",
+      "module": "-static"
+    },
+    "flags": {
+      "BUILD_SHARED_LIBS": "ON",
+      "GGML_BACKEND_DL": "ON",
+      "GGML_BLAS": "OFF",
+      "GGML_CPU_ALL_VARIANTS": "ON",
+      "GGML_CUDA": "OFF",
+      "GGML_NATIVE": "OFF",
+      "GGML_OPENMP": "OFF",
+      "GGML_STATIC": "ON",
+      "GGML_VULKAN": "OFF",
+      "WHISPER_BUILD_SERVER": "OFF",
+      "WHISPER_CURL": "OFF",
+      "WHISPER_SDL2": "OFF"
+    },
+    "cpuSelection": "Official GGML runtime feature scoring; generic x64 plus 13 optimized variants. GGML_NATIVE=OFF. No per-machine source assumptions."
+  },
+  "model": {
+    "name": "Whisper base multilingual",
+    "source": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
+    "path": "models/ggml-base.bin",
+    "sha256": "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"
+  },
+  "runtimeFiles": [
+    {
+      "name": "ggml-base.dll",
+      "bytes": 1283072,
+      "sha256": "e43f8793744ac2b57964e747020224f7d1a3e6d1c3de96a8893666013781a1cf",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "KERNEL32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-base.dll"
+    },
+    {
+      "name": "ggml-cpu-alderlake.dll",
+      "bytes": 1663488,
+      "sha256": "5736151ec3a49c29cf43b44c189da7b56a855335273bae5987b040408e7ddc15",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-alderlake.dll"
+    },
+    {
+      "name": "ggml-cpu-cannonlake.dll",
+      "bytes": 1733120,
+      "sha256": "f33420c91eb9a2f237ee2160094d9b013642688fe0da0dfa3d9b069e8820a60b",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-cannonlake.dll"
+    },
+    {
+      "name": "ggml-cpu-cascadelake.dll",
+      "bytes": 1720832,
+      "sha256": "eb60ba931fa3acf3015c109a76eb7fbf0a080c19436f32c7cec32952e88e78c5",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-cascadelake.dll"
+    },
+    {
+      "name": "ggml-cpu-cooperlake.dll",
+      "bytes": 1720832,
+      "sha256": "0b0c623000297a5ed9ea807d9442e0ab701a0b6b13b8f45c70b4bcfa41b1176a",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-cooperlake.dll"
+    },
+    {
+      "name": "ggml-cpu-haswell.dll",
+      "bytes": 1667584,
+      "sha256": "aa8f48411d219ebab0ed2c93e23b62d73f20d06f80354ed9c2e3fc9737e797f0",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-haswell.dll"
+    },
+    {
+      "name": "ggml-cpu-icelake.dll",
+      "bytes": 1726464,
+      "sha256": "1888179281a61bd762f00295440763bd054bc5defe5d827464b68bc993a48af3",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-icelake.dll"
+    },
+    {
+      "name": "ggml-cpu-ivybridge.dll",
+      "bytes": 1554432,
+      "sha256": "720ab2a1316481db1f05e1ee3fdf9953b3553a41c4e35560549c6b399f5aba30",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-ivybridge.dll"
+    },
+    {
+      "name": "ggml-cpu-piledriver.dll",
+      "bytes": 1558528,
+      "sha256": "244cffded4915a2e9e56b4092bd3cf3cea56a2bf5036ede0228bcf4aff18d26c",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-piledriver.dll"
+    },
+    {
+      "name": "ggml-cpu-sandybridge.dll",
+      "bytes": 1555456,
+      "sha256": "984d7d5349e6d428caabc8f19422ae8301ee28e1e153103c326783a33d8efb86",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-sandybridge.dll"
+    },
+    {
+      "name": "ggml-cpu-sapphirerapids.dll",
+      "bytes": 2068480,
+      "sha256": "274ad6b72cb7ae949d014585d24aa0da75b0581b825e289ae7c0a0e9b0328137",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-sapphirerapids.dll"
+    },
+    {
+      "name": "ggml-cpu-skylakex.dll",
+      "bytes": 1728512,
+      "sha256": "f72ee47e7b60a690418296a3562b510c0489821ed4c91a74cc4e05d75abefc3d",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-skylakex.dll"
+    },
+    {
+      "name": "ggml-cpu-sse42.dll",
+      "bytes": 1459712,
+      "sha256": "6509c72f11708ca3f6d97928f37274be4c5305bd9257cda881f3e4885bb6072c",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-sse42.dll"
+    },
+    {
+      "name": "ggml-cpu-x64.dll",
+      "bytes": 1452032,
+      "sha256": "7225535ebfc9b841688a3d2cfffbf4637ccde8185efda7b08383071907650f15",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-x64.dll"
+    },
+    {
+      "name": "ggml-cpu-zen4.dll",
+      "bytes": 1726464,
+      "sha256": "d03240b9bcf0b5067461b1572d5909e425683326c0c2b3a25b692c918918efab",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml-cpu-zen4.dll"
+    },
+    {
+      "name": "ggml.dll",
+      "bytes": 1210368,
+      "sha256": "a2e9896f6be965564ad584eede508c334f22f39c9fc1be92e9235b8d817956ab",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-multibyte-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/ggml.dll"
+    },
+    {
+      "name": "libwhisper.dll",
+      "bytes": 1635328,
+      "sha256": "f28b50e40c11efeb3a5cb0111822955f82e0bd0f815bb4a2f8de66b98f1b3e78",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "ggml.dll",
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-multibyte-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/libwhisper.dll"
+    },
+    {
+      "name": "whisper-cli.exe",
+      "bytes": 1955840,
+      "sha256": "23d8026450e6f4bfaaadabe1e2baa6c6305bbd31aad050295037c6250fbab09d",
+      "machine": "AMD64 (0x8664)",
+      "dependencies": [
+        "libwhisper.dll",
+        "ggml.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-multibyte-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ],
+      "debugSymbolsStripped": true,
+      "path": "runtime/Release/whisper-cli.exe"
+    }
+  ],
+  "licenses": [
+    {
+      "file": "LICENSE-llvm.txt",
+      "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+    },
+    {
+      "file": "LICENSE-mingw-runtime.txt",
+      "sha256": "1db8da07b436c68833c0673ffee3d9fcb2526047f3820b81661865dfedc79a1f"
+    },
+    {
+      "file": "LICENSE-miniaudio.txt",
+      "sha256": "c6aba4ade0407b7cc952ef1253bcac50991bb6eed7b5b8a83c9f5b9d5627d8d6"
+    },
+    {
+      "file": "LICENSE-nlohmann-json.txt",
+      "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14"
+    },
+    {
+      "file": "LICENSE-stb-vorbis.txt",
+      "sha256": "7587efcca32db8f95bf5860dea6dfa4be410ee723e1964db3689c8ddf2a2e4a9"
+    },
+    {
+      "file": "LICENSE-whisper.txt",
+      "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d"
+    },
+    {
+      "file": "LICENSE-winpthreads.txt",
+      "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177"
+    },
+    {
+      "file": "LICENSE-model.txt",
+      "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d"
+    }
+  ],
+  "execution": "Local CPU inference; temporary recordings are removed when the child process closes."
+}

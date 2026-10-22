@@ -1,0 +1,24 @@
+import {app,BrowserWindow,webContents} from 'electron';
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {fileURLToPath} from 'node:url';
+import {createVideoModule} from '../desktop/modules/video/module.mjs';
+import {overlaySuppression} from '../desktop/companion-policy.mjs';
+const data=process.env.GUAGUA_VIDEO_PUBLIC_DATA;
+if(!data||!path.isAbsolute(data))throw Error('Requires dedicated test data');
+app.setPath('userData',data);app.setPath('sessionData',path.join(data,'chromium'));
+app.whenReady().then(async()=>{
+  const project=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+  let probe=null,pending=false;
+  const update=async()=>{if(pending)return;pending=true;try{const {stdout}=await promisify(execFile)(path.join(project,'desktop/native/GuaguaDesktopBridge.exe'),['probe'],{encoding:'utf8',windowsHide:true,timeout:2500});probe=JSON.parse(stdout.trim());}catch{probe=null;}finally{pending=false;}};
+  await update();const timer=setInterval(update,700);timer.unref();
+  globalThis.videoPublic={probe:()=>probe};
+  globalThis.videoPublic.module=await createVideoModule({dataDir:data,cacheDir:path.join(data,'cache'),getSuppression:()=>overlaySuppression({doNotDisturb:false},probe)});
+  globalThis.videoPublic.capture=async(file)=>{const win=BrowserWindow.getAllWindows()[0];const image=await win.capturePage();await fs.writeFile(file,image.toPNG());};
+  globalThis.videoPublic.captureRemote=async(id,file)=>{const contents=webContents.getAllWebContents().find(w=>w.getURL().startsWith('https:')&&w.session.getStoragePath()?.endsWith(id));if(!contents)throw Error('Remote view unavailable');const image=await contents.capturePage();await fs.writeFile(file,image.toPNG());};
+  app.on('before-quit',()=>{clearInterval(timer);globalThis.videoPublic.module.dispose();});
+  app.on('window-all-closed',()=>{});
+  await globalThis.videoPublic.module.open('douyin');
+}).catch(error=>{console.error(error);app.exit(1);});

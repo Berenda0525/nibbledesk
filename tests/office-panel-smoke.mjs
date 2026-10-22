@@ -1,0 +1,14 @@
+import {_electron as electron} from '@playwright/test';import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+const root=process.cwd(),dataDir=await fs.mkdtemp(path.join(root,'.test-data/office-panel-')),env={...process.env,STAR_CHAT_TEST_DATA_DIR:dataDir};delete env.ELECTRON_RUN_AS_NODE;
+let app,page;const checks=[];try{
+ app=await electron.launch({args:[root],env,timeout:45000});page=await app.firstWindow();page.setDefaultTimeout(30000);
+ await page.getByLabel('APImart API Key').fill('office-panel-fixture-not-a-real-key');await page.getByRole('button',{name:'继续',exact:true}).click();await page.getByRole('button',{name:'跳过，进入聊天',exact:true}).click();await page.getByRole('button',{name:'文件',exact:true}).click();
+ for(const [kind,label,ext]of [['word','Word 文档','docx'],['sheet','Excel 表格','xlsx'],['presentation','演示文稿','pptx']]){
+  await page.getByRole('button',{name:'新建',exact:true}).click();await page.getByRole('button',{name:label,exact:true}).click();await page.getByLabel('文件名称').fill('右侧-'+kind);await page.getByRole('button',{name:'创建',exact:true}).click();
+  await page.locator('.document-docked iframe').waitFor();await page.waitForFunction(()=>!document.querySelector('.office-loading')&&document.querySelector('.document-save')?.disabled===false||!!document.querySelector('.document-error'),{},{timeout:200000});assert.deepEqual(await page.locator('.document-error').allTextContents(),[]);
+  await page.getByRole('button',{name:'保存',exact:true}).click();await page.getByText('已保存',{exact:true}).first().waitFor({timeout:45000});await page.getByRole('button',{name:'预览',exact:true}).click();await page.waitForFunction(()=>document.querySelector('.pdf-paper canvas')?.width>100||!!document.querySelector('.document-error'),{},{timeout:90000});assert.deepEqual(await page.locator('.document-error').allTextContents(),[]);
+  await page.screenshot({path:path.join(dataDir,kind+'-preview.png')});const state=await page.evaluate(()=>window.stellar.call('bootstrap')),asset=state.assets.find(a=>a.name==='右侧-'+kind+'.'+ext);assert.ok(asset);const bytes=await fs.readFile(path.join(dataDir,'agents/claude/files',asset.id));assert.equal(bytes.subarray(0,2).toString(),'PK');
+  checks.push({kind,bytes:bytes.length,officePdfPreview:true});console.log('PASS '+kind+' real Office -> PDF -> right preview');await page.getByRole('button',{name:'关闭文件面板'}).click();await page.locator('.document-docked').waitFor({state:'hidden'});
+ }
+ console.log(JSON.stringify({passed:true,dataDir,checks}));await fs.writeFile(path.join(dataDir,'report.json'),JSON.stringify({passed:true,checks},null,2));
+}catch(e){await page?.screenshot({path:path.join(dataDir,'failure.png')}).catch(()=>{});throw e;}finally{if(app){await app.evaluate(({dialog})=>{dialog.showMessageBoxSync=()=>1;}).catch(()=>{});await app.close();}}

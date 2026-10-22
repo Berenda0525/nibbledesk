@@ -1,0 +1,10 @@
+import Dropdown from './Dropdown.jsx';
+import React,{useState} from 'react';
+import {FileText,FileSpreadsheet,Presentation,LoaderCircle} from 'lucide-react';
+import {Modal} from './Common.jsx';
+const types=[{id:'word',name:'Word 文档',ext:'.docx',Icon:FileText},{id:'sheet',name:'Excel 表格',ext:'.xlsx',Icon:FileSpreadsheet},{id:'presentation',name:'演示文稿',ext:'.pptx',Icon:Presentation},{id:'markdown',name:'Markdown',ext:'.md',Icon:FileText}];
+export default function NewDocumentDialog({folders,folderId,call,onOpen,onClose}){
+ const [kind,setKind]=useState('word'),[name,setName]=useState('未命名文档'),[scope,setScope]=useState(folderId&&folderId!=='other'?folderId:folders.find(f=>f.kind==='agent')?.id||''),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ const create=async()=>{setBusy(true);setError('');try{const type=types.find(t=>t.id===kind),fileName=name.trim().toLowerCase().endsWith(type.ext)?name.trim():name.trim()+type.ext;const result=await call('newDocument',{kind,name:fileName,scope});onClose();onOpen(result);}catch(e){setError(e.message);}finally{setBusy(false);}};
+ return <Modal title="新建文件" onClose={onClose} footer={<><button className="button" onClick={onClose}>取消</button><button className="button primary" disabled={busy||!name.trim()||!scope} onClick={create}>{busy?<LoaderCircle size={14} className="spin"/>:null}创建</button></>}><div className="new-document-types">{types.map(t=><button key={t.id} className={kind===t.id?'selected':''} onClick={()=>setKind(t.id)}> <t.Icon size={26} strokeWidth={1.4}/><span>{t.name}</span></button>)}</div><div className="form-grid"><label className="full-width">文件名称<input value={name} maxLength={140} onChange={e=>setName(e.target.value)} autoFocus/></label><label className="full-width">保存到<Dropdown aria-label="保存到" value={scope} onChange={e=>setScope(e.target.value)}>{folders.filter(f=>f.kind!=='other').map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</Dropdown></label></div>{error&&<p className="setup-error" role="alert">{error}</p>}</Modal>;
+}
