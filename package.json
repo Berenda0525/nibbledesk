@@ -1,7 +1,7 @@
 {
   "name": "guagua-desktop",
   "productName": "瓜瓜",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "多模型聊天与创作桌面工作台",
   "author": "Guagua",
   "private": true,
