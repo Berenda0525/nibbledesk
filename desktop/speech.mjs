@@ -24,17 +24,24 @@ export function decodeSpeechWav(base64){
 
 export function createSpeechEngine({resourceDir,tempDir,spawnImpl=spawn}){
   const executable=path.join(resourceDir,'runtime','Release','whisper-cli.exe'),model=path.join(resourceDir,'models','ggml-base.bin');
+  const senseExecutable=path.join(resourceDir,'runtime','sensevoice','sherpa-onnx-offline.exe');
+  const senseModel=path.join(resourceDir,'models','sensevoice','model.int8.onnx'),senseTokens=path.join(resourceDir,'models','sensevoice','tokens.txt');
   let running=null;
-  async function status(){try{await Promise.all([fs.access(executable),fs.access(model)]);return {available:true,provider:'local',model:'whisper-base',busy:!!running};}catch{return {available:false,provider:'local',model:'whisper-base',message:'本地语音组件不完整，请重新安装瓜瓜。'};}}
+  async function status(){
+    try{await Promise.all([senseExecutable,senseModel,senseTokens,path.join(resourceDir,'runtime','sensevoice','onnxruntime.dll')].map(file=>fs.access(file)));return {available:true,provider:'local',model:'sensevoice-small-int8',busy:!!running};}catch{}
+    try{await Promise.all([fs.access(executable),fs.access(model)]);return {available:true,provider:'local',model:'whisper-base',busy:!!running};}catch{return {available:false,provider:'local',model:'whisper-base',message:'本地语音组件不完整，请重新安装瓜瓜。'};}
+  }
   async function transcribe({base64,mime,language='zh'}){
     if(running)throw new Error('上一段录音仍在识别，请稍候');
     if(mime&&mime!=='audio/wav'&&mime!=='audio/x-wav')throw new Error('请提交 WAV 格式录音');
     if(!['auto','zh','en'].includes(language))throw new Error('识别语言无效');
-    const wav=decodeSpeechWav(base64);if(wav.silent)return {text:'',model:'whisper-base',provider:'local'};
+    const wav=decodeSpeechWav(base64);
     const controller=new AbortController();running=controller;
     let directory;
     try{
       const ready=await status();if(!ready.available)throw new Error(ready.message);
+      if(wav.silent)return {text:'',model:ready.model,provider:'local'};
+      const useSenseVoice=ready.model==='sensevoice-small-int8';let standardOutput='';
       await fs.mkdir(tempDir,{recursive:true});directory=await fs.mkdtemp(path.join(tempDir,'speech-'));
       const input=path.join(directory,'recording.wav'),output=path.join(directory,'transcript');
       controller.signal.throwIfAborted();
@@ -42,15 +49,23 @@ export function createSpeechEngine({resourceDir,tempDir,spawnImpl=spawn}){
       await new Promise((resolve,reject)=>{
         // 短句的语种检测容易漂移；自动模式对六秒内录音优先采用中文。
         const resolvedLanguage=language==='auto'&&wav.duration<6?'zh':language;
-        const child=spawnImpl(executable,['-m',path.relative(directory,model),'-f','recording.wav','-l',resolvedLanguage,...(resolvedLanguage==='zh'?['--prompt','以下是普通话，请用简体中文记录。瓜瓜。']:[]),'-t',String(Math.max(1,Math.min(4,os.availableParallelism?.()??2))),'-ng','-oj','-of','transcript','-nt','-np'],{cwd:directory,windowsHide:true,stdio:['ignore','ignore','pipe'],signal:controller.signal});
+        const args=useSenseVoice
+          ?[`--tokens=${path.relative(directory,senseTokens)}`,`--sense-voice-model=${path.relative(directory,senseModel)}`,`--sense-voice-language=${resolvedLanguage}`,'--sense-voice-use-itn=1','--num-threads=2','--debug=0','recording.wav']
+          :['-m',path.relative(directory,model),'-f','recording.wav','-l',resolvedLanguage,...(resolvedLanguage==='zh'?['--prompt','以下是普通话，请用简体中文记录。瓜瓜。']:[]),'-t',String(Math.max(1,Math.min(4,os.availableParallelism?.()??2))),'-ng','-oj','-of','transcript','-nt','-np'];
+        const child=spawnImpl(useSenseVoice?senseExecutable:executable,args,{cwd:directory,windowsHide:true,stdio:['ignore',useSenseVoice?'pipe':'ignore','pipe'],signal:controller.signal});
         let diagnostic='',processError;child.stderr?.on('data',chunk=>{diagnostic=(diagnostic+chunk.toString()).slice(-6000);});
+        child.stdout?.setEncoding?.('utf8');
+        // Keep split multibyte characters intact and bound native output before parsing.
+        const outputChunks=[];let outputBytes=0;
+        child.stdout?.on('data',chunk=>{outputBytes+=Buffer.byteLength(chunk);if(outputBytes>1048576){processError=new Error('语音组件返回内容过大');controller.abort();return;}outputChunks.push(Buffer.from(chunk));});
         const timeout=setTimeout(()=>controller.abort(),180000);timeout.unref?.();
-        child.once('error',error=>{processError=controller.signal.aborted?new Error('语音识别已停止'):new Error('本地语音组件启动失败，请检查安装文件。',{cause:error});});
-        child.once('close',code=>{clearTimeout(timeout);if(processError)reject(processError);else if(controller.signal.aborted)reject(new Error('语音识别已停止'));else if(code===0)resolve();else reject(new Error(`语音识别失败（${code??'启动异常'}）${/failed to open.*model/i.test(diagnostic)?'，模型文件无法读取':''}`));});
+        child.once('error',error=>{processError??=controller.signal.aborted?new Error('语音识别已停止'):new Error('本地语音组件启动失败，请检查安装文件。',{cause:error});});
+        child.once('close',code=>{clearTimeout(timeout);if(processError)reject(processError);else if(controller.signal.aborted)reject(new Error('语音识别已停止'));else if(code===0){standardOutput=Buffer.concat(outputChunks).toString('utf8');resolve();}else reject(new Error(`语音识别失败（${code??'启动异常'}）${/failed to open.*model/i.test(diagnostic)?'，模型文件无法读取':''}`));});
       });
-      const result=JSON.parse(await fs.readFile(output+'.json','utf8'));
-      const text=(result.transcription??[]).map(segment=>segment.text??'').join('').trim().slice(0,20000);
-      return {text,model:'whisper-base',provider:'local'};
+      let result;try{result=JSON.parse(useSenseVoice?standardOutput:await fs.readFile(output+'.json','utf8'));}catch{throw new Error('本地语音组件返回了无效结果，请重试');}
+      if(useSenseVoice?typeof result?.text!=='string':!Array.isArray(result?.transcription))throw new Error('本地语音组件返回了无效结果，请重试');
+      const text=(useSenseVoice?(typeof result?.text==='string'?result.text:''):(result.transcription??[]).map(segment=>segment.text??'').join('')).trim().slice(0,20000);
+      return {text,model:ready.model,provider:'local'};
     }finally{
       if(running===controller)running=null;
       if(directory){for(const name of ['recording.wav','transcript.json'])await fs.unlink(path.join(directory,name)).catch(()=>{});await fs.rmdir(directory).catch(()=>{});}

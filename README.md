@@ -67,6 +67,7 @@ npm run desktop
 | [Folia](https://github.com/chthollyphile/folia-major) | 音乐能力的上游项目；固定版本源码构建后与瓜瓜宿主集成 |
 | [eIsland](https://github.com/JNTMTMTM/eIsland) | Windows 顶部 Island 形态与交互参考 |
 | [Open Island](https://github.com/Octane0411/open-vibe-island) | AI 助手桌面入口与展开/收起体验参考 |
+| [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) / [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | 可选本地中文语音识别；引擎与模型适用不同许可，见 [语音说明](docs/SPEECH.md) |
 | [whisper.cpp](https://github.com/ggml-org/whisper.cpp) / [Whisper](https://github.com/openai/whisper) | 本机语音识别引擎与模型 |
 | [ZetaOffice](https://zetaoffice.net/) / [LibreOffice](https://www.libreoffice.org/) | Office 文档页面转换和阅读所需的可选办公引擎 |
 
@@ -93,6 +94,14 @@ npm run build
 ```
 
 提交问题时请提供版本、复现步骤和脱敏截图；不要上传 API Key、登录 Cookie、聊天数据库或私人附件。参见 [贡献指南](CONTRIBUTING.md) 和 [安全说明](SECURITY.md)。
+
+## 项目定位与社区倡议
+
+瓜瓜由个人出于学习、研究和交流目的维护，当前免费分享。维护者不通过本项目售卖软件或提供收费授权。欢迎社区持续改进、修复和贡献，并倡议衍生项目继续免费分享。
+
+第三方的收费分发、付费服务、宣传和衍生产品不代表本项目维护者，也不构成维护者对其经营活动的背书。请勿冒用维护者身份，或将衍生项目宣传为瓜瓜官方产品。修改和再分发应遵守适用许可，保留来源、权利声明，并按许可标明修改。
+
+本段说明项目定位和社区倡议，不改变 AGPL-3.0-only 及第三方许可授予的权利。软件按现状提供；相关责任以适用法律及许可证为准，免费分享并不替代第三方授权义务。
 
 ## 许可证
 

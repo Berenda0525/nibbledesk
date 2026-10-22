@@ -1,0 +1,63 @@
+{
+  "engine": "sherpa-onnx v1.13.8 / SenseVoiceSmall int8, Windows x64 CPU",
+  "runtime": {
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-win-x64-shared-MT-Release-no-tts.tar.bz2",
+    "sha256": "4b0a94f7b5c606b1b64a19a831c2127559e4b3d34e195465ebc7be73d9ed4783",
+    "license": "Apache-2.0",
+    "onnxruntime": "1.28.2 (MIT)"
+  },
+  "model": {
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17.tar.bz2",
+    "sha256": "7d1efa2138a65b0b488df37f8b89e3d91a60676e416f515b952358d83dfd347e",
+    "source": "https://huggingface.co/FunAudioLLM/SenseVoiceSmall",
+    "license": "FunASR Model Open Source License Agreement 1.1",
+    "licenseUrl": "https://github.com/modelscope/FunASR/blob/58830eca4012644aac0c3218c3ccc7d98f003fda/MODEL_LICENSE"
+  },
+  "files": [
+    {
+      "file": "runtime/sensevoice/sherpa-onnx-offline.exe",
+      "bytes": 2421760,
+      "sha256": "e93182fc262658b5bc31afc98ba952b104440a6c8f3d44dd43a2fc20eb400455"
+    },
+    {
+      "file": "runtime/sensevoice/onnxruntime.dll",
+      "bytes": 17799168,
+      "sha256": "7f66f939a881baf4f46a2216496798edf4a1429878b646d12674aa62f27d8a25"
+    },
+    {
+      "file": "runtime/sensevoice/onnxruntime_providers_shared.dll",
+      "bytes": 104960,
+      "sha256": "551d0e1fe4c227d8542314ba718d52f4379e0c7bfe729a37c59833a884e27b4d"
+    },
+    {
+      "file": "models/sensevoice/model.int8.onnx",
+      "bytes": 239233841,
+      "sha256": "c71f0ce00bec95b07744e116345e33d8cbbe08cef896382cf907bf4b51a2cd51"
+    },
+    {
+      "file": "models/sensevoice/tokens.txt",
+      "bytes": 315894,
+      "sha256": "f449eb28dc567533d7fa59be34e2abca8784f771850c78a47fb731a31429a1dc"
+    },
+    {
+      "file": "LICENSE-sherpa-onnx.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "file": "LICENSE-onnxruntime.txt",
+      "bytes": 1073,
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c"
+    },
+    {
+      "file": "NOTICE-onnxruntime.txt",
+      "bytes": 325054,
+      "sha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+    },
+    {
+      "file": "LICENSE-sensevoice-model.txt",
+      "bytes": 5306,
+      "sha256": "7dba975a2069691db4992b0592d70828b330d2f8a30a71450f4e152a554e84f8"
+    }
+  ]
+}
