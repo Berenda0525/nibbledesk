@@ -1,7 +1,7 @@
 {
   "name": "guagua-desktop",
   "productName": "瓜瓜",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "多模型聊天与创作桌面工作台",
   "author": "Guagua",
   "private": true,
@@ -125,6 +125,11 @@
         "to": "speech",
         "filter": [
           "models/*.bin",
+          "models/sensevoice/model.int8.onnx",
+          "models/sensevoice/tokens.txt",
+          "runtime/sensevoice/sherpa-onnx-offline.exe",
+          "runtime/sensevoice/onnxruntime.dll",
+          "runtime/sensevoice/onnxruntime_providers_shared.dll",
           "runtime/Release/ggml-base.dll",
           "runtime/Release/ggml-cpu-alderlake.dll",
           "runtime/Release/ggml-cpu-cannonlake.dll",
@@ -144,6 +149,8 @@
           "runtime/Release/libwhisper.dll",
           "runtime/Release/whisper-cli.exe",
           "LICENSE-*.txt",
+          "NOTICE-onnxruntime.txt",
+          "sensevoice-provenance.json",
           "provenance.json",
           "source-compatibility.patch"
         ]
@@ -157,7 +164,7 @@
         ]
       },
       {
-        "from": ".build-cache/release-source-current",
+        "from": ".build-cache/release-source-public-current",
         "to": "source"
       },
       {
@@ -206,10 +213,10 @@
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Berenda0525/guagua.git"
+    "url": "https://github.com/Berenda0525/nibbledesk.git"
   },
-  "homepage": "https://github.com/Berenda0525/guagua",
+  "homepage": "https://github.com/Berenda0525/nibbledesk",
   "bugs": {
-    "url": "https://github.com/Berenda0525/guagua/issues"
+    "url": "https://github.com/Berenda0525/nibbledesk/issues"
   }
 }

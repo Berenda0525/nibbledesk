@@ -8,13 +8,24 @@ tags: [AI/LLM, 编程]
 
 <p align="center"><img src="desktop/assets/guagua-icon.png" width="112" alt="瓜瓜仓鼠头像"></p>
 
-<h1 align="center">瓜瓜 · Guagua</h1>
-<p align="center">一个窗口，和你的 AI 伙伴一起聊天、做事、听音乐。</p>
-<p align="center">Windows · Electron + React · AGPL-3.0</p>
+<h1 align="center">NibbleDesk</h1>
+<p align="center"><strong>Your AI companions, one desktop away.</strong><br>聊天、创作、听音乐，让 AI 伙伴常伴桌面。</p>
+<p align="center">Windows x64 · Multi-model chat · Agent tasks · Desktop Island</p>
+<p align="center"><a href="docs/BUILD.md">Build</a> · <a href="#screenshots--界面预览">Screenshots</a> · <a href="docs/SPEECH.md">Local speech</a> · <a href="CONTRIBUTING.md">Contribute</a> · <a href="LICENSE">AGPL-3.0</a></p>
+
+**NibbleDesk** is a Windows AI workspace that brings multi-model conversations, agent tasks, document previews, music and a desktop island into one place. Connect your own model services and keep each companion’s conversations separate. Model requests go to the service you configure; speech transcription runs locally.
+
+Nibble means a small bite, a nod to our hamster mascot. **瓜瓜** remains the Chinese name shown in the desktop app.
 
 瓜瓜是面向个人使用的多模型 AI 聊天与创作桌面工作台。你可以为不同伙伴选择服务商、模型和角色，在独立对话中交流，也可以把几位伙伴加入群聊，共同完成任务。文件阅读、演示文稿、音乐和桌面 Island 放在同一套界面中，减少在工具之间来回切换。
 
-当前发布为 **1.7.1 开发源码预览**，主要面向 Windows 10/11 x64；欢迎试用、报告问题和参与改进。此仓库发布源码，安装包另行验收和发布。
+当前发布为 **1.7.2 开发源码预览**，主要面向 Windows 10/11 x64；欢迎试用、报告问题和参与改进。此仓库发布源码，安装包另行验收和发布。
+
+## Screenshots / 界面预览
+
+以下为应用实际窗口，使用独立演示数据展示界面；示例文字不代表真实模型调用或能力测评。
+
+![Multi-model workspace / 多模型聊天工作台](docs/screenshots/workspace.jpg)
 
 ## 可以做什么
 
@@ -24,15 +35,15 @@ tags: [AI/LLM, 编程]
 - **文件与 PPT**：文件中心、右侧快速阅读、批注、页面/网格切换、演示文稿生成及用户自有 PPTX 模板导入。
 - **桌面 Island**：顶端快聊入口，悬停展开、文件拖入、模型切换、语音输入、音乐歌词和音波；支持勿扰及全屏抑制。
 - **音乐与影音**：集成 Folia 网页音乐能力及本地网易云 API 宿主；抖音、小红书、B 站使用独立网页会话，可切换视频小窗。
-- **本地语音与用量**：Whisper 中文/英语语音输入；按接口返回值记录 Token，并依据可配置价格估算费用。
+- **本地语音与用量**：SenseVoice 中文优先识别及 Whisper 备用本地组件；按接口返回值记录 Token，并依据可配置价格估算费用。
 
 ## 快速开始
 
 需要 **Windows x64、Node.js 24、npm、Git**。模型服务需要你自己的账户和密钥；服务费用由对应平台结算。
 
 ```powershell
-git clone https://github.com/Berenda0525/guagua.git
-cd guagua
+git clone https://github.com/Berenda0525/nibbledesk.git
+cd nibbledesk
 npm ci
 npm run resources:node
 npm run build

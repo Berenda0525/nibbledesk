@@ -17,7 +17,7 @@ for(const file of files){
  if(segments.some(s=>['data','cache','private','node_modules','.build-cache','.test-data','.local-data','输出','资料'].includes(s))||/(?:^|\/)\.env(?:\.|$)|\.(?:pem|key|pfx|sqlite\w*|db|exe|dll|bin|zip|7z|pptx|docx|xlsx|pdf)$/i.test(file))findings.push({file,rule:'private-or-generated-file'});
  const buffer=staged?git('show',':'+file):await fs.readFile(path.join(root,file));bytes+=buffer.length;
  if(buffer.length>5*1024*1024)findings.push({file,rule:'oversized-file'});
- if(/\.(?:png|ico)$/i.test(file)){binaryFiles++;continue;}
+ if(/\.(?:png|ico|jpe?g)$/i.test(file)){binaryFiles++;continue;}
  const lines=buffer.toString('utf8').split(/\r?\n/);
  const rules={
   credential:/\b(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})/,

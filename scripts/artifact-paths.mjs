@@ -7,7 +7,7 @@ export function artifactPaths(version){
   if(!/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/.test(version))throw Error('版本号不合法');
   const release=path.join(project,'release'),external=path.join(path.parse(project).root,'GuaguaBuild');
   return {project,release,external,versionRelease:path.join(release,version),runtime:path.join(release,version,'win-unpacked'),
-    qa:path.join(external,'qa',version),evidence:path.join(project,'输出','测试'),source:path.join(project,'.build-cache','release-source-current')};
+    qa:path.join(external,'qa',version),evidence:path.join(project,'输出','测试'),source:path.join(project,'.build-cache','release-source-public-current')};
 }
 export async function assertIsolatedAncestors(directory){
   let existing=path.resolve(directory),canonical;const suffix=[];

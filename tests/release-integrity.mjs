@@ -33,6 +33,8 @@ for(const file of binaries)assert.equal(hash(await fs.readFile(path.join(speechD
 const speechFiles=await fs.readdir(speechDirectory),licenses=speechFiles.filter(file=>file.startsWith('LICENSE-'));
 const provenance=JSON.parse(await fs.readFile(path.join(speechDirectory,'provenance.json'),'utf8'));
 for(const license of provenance.licenses){assert.ok(licenses.includes(license.file));assert.equal(hash(await fs.readFile(path.join(speechDirectory,license.file))),license.sha256,license.file);}
+const senseVoice=JSON.parse(await fs.readFile(path.join(speechDirectory,'sensevoice-provenance.json'),'utf8'));
+for(const entry of senseVoice.files){assert.equal(hash(await fs.readFile(path.join(speechDirectory,entry.file))),entry.sha256,entry.file);assert.equal(hash(await fs.readFile(path.join(root,'resources/speech',entry.file))),entry.sha256,entry.file);}
 const doubao=hash(packagedFile('desktop/companion/assets/doubao.png'));assert.equal(doubao,hash(await fs.readFile('public/assets/agents/doubao-user.png')));
 assert.equal(JSON.parse(packagedFile('node_modules/image-size/package.json')).version,'2.0.4');
 const packedEntries=asar.listPackage(archive).map(name=>name.replaceAll('\\','/'));

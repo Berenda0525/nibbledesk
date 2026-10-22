@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 
 // 发行源码使用固定目录清单；运行数据、密钥、构建缓存不参与遍历。
 const root=process.cwd();
-const destination=path.join(root,'.build-cache','release-source-current');
+const destination=path.join(root,'.build-cache','release-source-public-current');
 const folders=['shared','src','core','desktop','public','scripts','tests'];
 const extensions=new Set(['.mjs','.cjs','.js','.jsx','.ts','.tsx','.css','.html','.json','.svg','.png','.ico','.cs','.ps1','.nsh']);
 const files=[];
@@ -18,7 +18,7 @@ async function collect(relative){
 }
 for(const folder of folders)await collect(folder);
 files.push('package.json','package-lock.json','index.html','vite.config.js','LICENSE','NOTICE.txt');
-const notes=Object.fromEntries(['README.md','SECURITY.md','CONTRIBUTING.md','docs/BUILD.md','docs/THIRD_PARTY.md'].map(file=>[file,file]));
+const notes=Object.fromEntries(['README.md','SECURITY.md','CONTRIBUTING.md','docs/BUILD.md','docs/THIRD_PARTY.md','docs/SPEECH.md'].map(file=>[file,file]));
 const expected=new Set([...files,...Object.keys(notes),'source-manifest.json']);
 // 更新快照前拒绝清单外残留，避免曾经的源码或手动放入的文件进入发行包。
 async function checkDestination(relative=''){
