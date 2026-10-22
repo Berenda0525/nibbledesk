@@ -66,8 +66,11 @@ export function createIslandChatController({service,onSnapshot=()=>{}}){
       for(const agent of state.agents){const chat=chatFor(state,agent.id);if(chat||snapshots.has(agent.id)){if(chat)selected.set(agent.id,chat.id);publish(snapshot(state,agent.id,chat));}}
     }else if(event.type==='delta'){
       const value=[...snapshots.values()].find(item=>item.chatId===event.chatId);if(!value)return;
-      const next=structuredClone(value),message=next.messages.find(item=>item.id===event.messageId);if(!message)return;
-      message.content=preview(event.text);publish(next);
+      const message=value.messages.find(item=>item.id===event.messageId);if(!message)return;
+      const content=preview(event.text);if(message.content===content)return;
+      // 单条回复已确认变化，只替换该消息；边界处的深拷贝隔离接收方修改。
+      const next={...value,messages:value.messages.map(item=>item===message?{...item,content}:item)};
+      snapshots.set(next.agentId,next);onSnapshot(structuredClone(next));
     }
   }
   async function setModel({agentId,model}={}){const state=await service.getState();const a=agentFor(state,agentId);if(chatFor(state,agentId)?.running)throw new Error('请先等待当前回复结束');await service.call('updateAgent',{id:agentId,provider:a.provider,model});return read({agentId});}

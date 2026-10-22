@@ -1,8 +1,21 @@
 import {createIslandAttachments} from './file-drop.js';
 import {audioToWav} from '../../shared/audio-wav.mjs';
+import {createIslandMotion,islandFrame} from './motion.mjs';
 'use strict';
 const $=selector=>document.querySelector(selector);
 const island=$('#island'),panel=$('#panel'),prompt=$('#prompt'),transcript=$('#transcript'),messages=$('#messages'),error=$('#error');
+let surfaceWidth=432,surfaceHeight=466;
+const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+const motion=createIslandMotion({reducedMotion:motionPreference.matches,paint:progress=>{
+  const frame=islandFrame(progress,surfaceWidth,surfaceHeight);
+  island.style.clipPath=frame.clipPath;
+  panel.style.opacity=String(frame.panelOpacity);panel.style.transform=frame.panelTransform;
+  panel.style.visibility=frame.panelOpacity>0?'visible':'hidden';
+  const compact=$('#compact');compact.style.opacity=String(frame.compactOpacity);compact.style.transform=frame.compactTransform;
+}});
+const updateMotionPreference=event=>motion.setReducedMotion(event.matches);
+motionPreference.addEventListener('change',updateMotionPreference);
+addEventListener('pagehide',()=>{motion.dispose();motionPreference.removeEventListener('change',updateMotionPreference);},{once:true});
 const snapshots=new Map(),drafts=new Map(),pending=new Set();
 const images={claude:'claude.svg',gpt:'gpt.svg',gemini:'gemini.png',deepseek:'deepseek.svg',kimi:'kimi.svg',doubao:'doubao.png'};
 let music=null;
@@ -58,12 +71,13 @@ async function selectAgent(id){
 }
 function applyExpanded(value){
   expanded=!!value;island.dataset.expanded=String(expanded);$('#compact').setAttribute('aria-expanded',String(expanded));
+  motion.setExpanded(expanded);
   panel.inert=!expanded;panel.setAttribute('aria-hidden',String(!expanded));$('#compact').tabIndex=expanded?-1:0;
   if(!expanded){prompt.blur();stopIslandRecording(true);$('#model-menu').hidden=true;}
 }
 function render(state){
   if(Object.hasOwn(state,'music')){music=state.music;island.classList.toggle('music-playing',!!music?.playing);$('#music-strip').hidden=!music?.title;$('#music-title').textContent=music?.title||'';$('#music-lyric').textContent=music?.lyric||music?.artist||'';for(const root of document.querySelectorAll('.music-wave'))[...root.children].forEach((bar,i)=>bar.style.setProperty('--energy',String(music?.playing?music.bands?.[i]||0:0)));}
-  if(state.geometry){document.documentElement.style.setProperty('--surface-width',state.geometry.surfaceWidth+'px');document.documentElement.style.setProperty('--surface-height',state.geometry.surfaceHeight+'px');}
+  if(state.geometry){surfaceWidth=state.geometry.surfaceWidth;surfaceHeight=state.geometry.surfaceHeight;document.documentElement.style.setProperty('--surface-width',surfaceWidth+'px');document.documentElement.style.setProperty('--surface-height',surfaceHeight+'px');motion.refresh();}
   if(typeof state.expanded==='boolean')applyExpanded(state.expanded);
   if(state.releaseFocus)prompt.blur();
   if(Array.isArray(state.agents)){

@@ -26,6 +26,19 @@ try{
   assert.deepEqual(await application.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().includes('mode=island')).getBounds()),initial.bounds);
   assert.equal(await island.getByRole('tab').count(),6);assert.equal(await island.locator('.agent-picture img').evaluateAll(images=>images.every(image=>image.complete&&image.naturalWidth>0)),true);
   await island.screenshot({path:path.join(output,'02-展开.png')});checks.push('150ms 悬停展开、不抢焦点、原生窗口尺寸稳定、六个头像');
+  const motionCheck=await island.evaluate(async()=>{
+    const surface=document.querySelector('#island'),panel=document.querySelector('#panel'),frames=[];
+    const size=()=>({width:panel.offsetWidth,height:panel.offsetHeight});const initial=size();
+    await window.companion.call('collapse');
+    for(let i=0;i<5;i++)await new Promise(resolve=>requestAnimationFrame(()=>{frames.push({clip:surface.style.clipPath,size:size()});resolve();}));
+    const middle=surface.style.clipPath;await window.companion.call('expand');
+    for(let i=0;i<60;i++)await new Promise(resolve=>requestAnimationFrame(()=>{frames.push({clip:surface.style.clipPath,size:size()});resolve();}));
+    return {initial,frames,middle,end:surface.style.clipPath,transition:getComputedStyle(surface).transitionDuration};
+  });
+  assert.notEqual(motionCheck.middle,motionCheck.end);assert.ok(new Set(motionCheck.frames.map(frame=>frame.clip)).size>6);
+  assert.equal(motionCheck.transition,'0s');
+  assert.ok(motionCheck.frames.every(frame=>frame.size.width===motionCheck.initial.width&&frame.size.height===motionCheck.initial.height));
+  checks.push('弹簧裁切逐帧变化、快速反向展开、聊天布局尺寸稳定');
   await island.getByRole('tab',{name:'DeepSeek',exact:true}).click();
   await island.getByRole('textbox',{name:'快聊输入'}).click();await island.getByRole('textbox',{name:'快聊输入'}).fill('帮我梳理今天的工作。');
   await island.getByRole('button',{name:'发送消息',exact:true}).click();
